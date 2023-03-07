@@ -1,22 +1,35 @@
 #if($context.gameType == "Multi")import com.codingame.gameengine.runner.MultiplayerGameRunner#end
-#if($context.gameType == "Solo")import com.codingame.gameengine.runner.SoloGameRunner#end
+#if($context.gameType != "Multi")import com.codingame.gameengine.runner.SoloGameRunner#end
 
 
 object SkeletonMain {
     @JvmStatic
     fun main(args: Array<String>) {
-#if($context.gameType == "Solo")        val gameRunner = SoloGameRunner()
+#if($context.gameType != "Multi")        val gameRunner = SoloGameRunner()
 
         // Sets the player
-        gameRunner.setAgent(Agent1::class.java)
+        gameRunner.setAgent(Agent::class.java)
 
         // Sets a test case
         gameRunner.setTestCase("test1.json")#end
 #if($context.gameType == "Multi")        val gameRunner = MultiplayerGameRunner()
 
         // Adds as many player as you need to test your game
-        gameRunner.addAgent(Agent1::class.java)
-        gameRunner.addAgent(Agent2::class.java)
+        gameRunner.addAgent(Agent::class.java)
+#if($context.numberOfPlayersMin >= 2)        gameRunner.addAgent(Agent::class.java)
+#end
+#if($context.numberOfPlayersMin >= 3)        gameRunner.addAgent(Agent::class.java)
+#end
+#if($context.numberOfPlayersMin >= 4)        gameRunner.addAgent(Agent::class.java)
+#end
+#if($context.numberOfPlayersMin >= 5)        gameRunner.addAgent(Agent::class.java)
+#end
+#if($context.numberOfPlayersMin >= 6)        gameRunner.addAgent(Agent::class.java)
+#end
+#if($context.numberOfPlayersMin >= 7)        gameRunner.addAgent(Agent::class.java)
+#end
+#if($context.numberOfPlayersMin >= 8)        gameRunner.addAgent(Agent::class.java)
+#end
 
         // Another way to add a player
         // gameRunner.addAgent("python3 /home/user/player.py");#end

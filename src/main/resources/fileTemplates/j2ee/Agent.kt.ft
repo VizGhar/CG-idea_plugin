@@ -1,6 +1,6 @@
 import java.util.*
 
-object Agent2 {
+object Agent {
     @JvmStatic
     fun main(args: Array<String>?) {
         val scanner = Scanner(System.`in`)

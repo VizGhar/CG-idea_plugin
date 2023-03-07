@@ -2,15 +2,16 @@ package com.codingame.game
 
 import com.codingame.gameengine.core.AbstractPlayer
 import com.codingame.gameengine.core.AbstractReferee
-import com.codingame.gameengine.core.MultiplayerGameManager
+#if($context.gameType != "Multi")import com.codingame.gameengine.core.SoloGameManager#end
+#if($context.gameType == "Multi")import com.codingame.gameengine.core.MultiplayerGameManager#end
+
 import com.codingame.gameengine.module.entities.GraphicEntityModule
 import com.google.inject.Inject
 
 class Referee : AbstractReferee() {
 
-    #if($context.gameType == "Solo")@Inject private lateinit var gameManager: SoloGameManager<Player>#end
-
-    #if($context.gameType == "Multi")@Inject private lateinit var gameManager: MultiplayerGameManager<Player>#end
+#if($context.gameType != "Multi")    @Inject private lateinit var gameManager: SoloGameManager<Player>#end
+#if($context.gameType == "Multi")    @Inject private lateinit var gameManager: MultiplayerGameManager<Player>#end
 
     @Inject private lateinit var graphicEntityModule: GraphicEntityModule
 
@@ -19,6 +20,18 @@ class Referee : AbstractReferee() {
     }
 
     override fun gameTurn(turn: Int) {
+#if($context.gameType != "Multi")
+        val player = gameManager.player
+        player.sendInputLine("input")
+        player.execute()
+        try {
+            val outputs = player.outputs
+            // Check validity of the player output and compute the new game state
+        } catch (e: AbstractPlayer.TimeoutException) {
+            gameManager.loseGame()
+        }
+#end
+#if($context.gameType == "Multi")
         for (player in gameManager.activePlayers) {
             player.sendInputLine("input")
             player.execute()
@@ -31,5 +44,6 @@ class Referee : AbstractReferee() {
                 player.deactivate(String.format("$%d timeout!", player.index))
             }
         }
+#end
     }
 }

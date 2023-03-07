@@ -1,7 +1,10 @@
 package com.codingame.game;
-import com.codingame.gameengine.core.AbstractMultiplayerPlayer;
 
-#if($context.gameType=="Solo")public class Player extends AbstractSoloPlayer {#end
+#if($context.gameType!="Multi")import com.codingame.gameengine.core.AbstractSoloPlayer;#end
+#if($context.gameType=="Multi")import com.codingame.gameengine.core.AbstractMultiplayerPlayer;#end
+
+
+#if($context.gameType!="Multi")public class Player extends AbstractSoloPlayer {#end
 #if($context.gameType=="Multi")public class Player extends AbstractMultiplayerPlayer {#end
 
     @Override

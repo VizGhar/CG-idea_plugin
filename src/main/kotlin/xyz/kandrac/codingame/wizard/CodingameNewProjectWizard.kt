@@ -64,8 +64,7 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
                 GENERATOR_LANGUAGE_JAVA ->
                     listOf(
                         // test sources
-                        GeneratorTemplateFile("src/test/java/Agent1.java", ftManager.getJ2eeTemplate("Agent1.java")),
-                        GeneratorTemplateFile("src/test/java/Agent2.java", ftManager.getJ2eeTemplate("Agent2.java")),
+                        GeneratorTemplateFile("src/test/java/Agent.java", ftManager.getJ2eeTemplate("Agent.java")),
                         GeneratorTemplateFile("src/test/java/SkeletonMain.java", ftManager.getJ2eeTemplate("SkeletonMain.java")),
 
                         // sources
@@ -75,8 +74,7 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
                 GENERATOR_LANGUAGE_KOTLIN ->
                     listOf(
                         // test sources
-                        GeneratorTemplateFile("src/test/java/Agent1.kt", ftManager.getJ2eeTemplate("Agent1.kt")),
-                        GeneratorTemplateFile("src/test/java/Agent2.kt", ftManager.getJ2eeTemplate("Agent2.kt")),
+                        GeneratorTemplateFile("src/test/java/Agent.kt", ftManager.getJ2eeTemplate("Agent.kt")),
                         GeneratorTemplateFile("src/test/java/SkeletonMain.kt", ftManager.getJ2eeTemplate("SkeletonMain.kt")),
 
                         // sources
@@ -97,6 +95,15 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
                 else -> throw IllegalStateException("Either $GENERATOR_BUILD_SYSTEM_MAVEN or $GENERATOR_BUILD_SYSTEM_GRADLE can be selected as `GeneratorContext.buildSystem`")
             }
 
+            val testCases = when (GeneratorContext.gameType) {
+                GENERATOR_TYPE_SOLO -> listOf(
+                    GeneratorTemplateFile("config/test1.json", ftManager.getJ2eeTemplate("test1.json")),
+                )
+                GENERATOR_TYPE_OPTIM -> listOf(
+                    GeneratorTemplateFile("config/test1.json", ftManager.getJ2eeTemplate("test1.json")),
+                )
+                else -> emptyList()
+            }
 
             ApplicationManager.getApplication().runWriteAction{
                 @Suppress("UnstableApiUsage")
@@ -120,7 +127,7 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
                         // view resources
                         GeneratorTemplateFile("src/main/resources/view/config.js", ftManager.getJ2eeTemplate("config.js")),
                         GeneratorTemplateFile("src/main/resources/view/demo.js", ftManager.getJ2eeTemplate("demo.js")),
-                    ) + sources + buildSystem,
+                    ) + sources + buildSystem + testCases,
 
                     // variables passed to fileTemplates
                     mapOf(

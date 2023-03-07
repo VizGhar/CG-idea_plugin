@@ -15,10 +15,6 @@ class CgGameTypeMultiStep(parentStep: NewProjectWizardStep) : AbstractNewProject
     private lateinit var dropdownMax: DropDownLink<Int>
 
     override fun setupUI(builder: Panel) {
-        builder.row {
-            text("asfdjnsajf")
-            comment("babfkabnlkfd")
-        }
         builder.twoColumnsRow({
             label(CodingameWizardBundle.getMessage("codingame.new.project.wizard.game.type.multi.players.min"))
         }) {

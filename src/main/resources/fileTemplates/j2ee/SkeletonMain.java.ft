@@ -5,10 +5,10 @@
 public class SkeletonMain {
     public static void main(String[] args) {
 
-#if($context.gameType == "Solo")        SoloGameRunner gameRunner = new SoloGameRunner();
+#if($context.gameType != "Multi")        SoloGameRunner gameRunner = new SoloGameRunner();
 
         // Sets the player
-        gameRunner.setAgent(Player1.class);
+        gameRunner.setAgent(Agent.class);
 
         // Sets a test case
         gameRunner.setTestCase("test1.json");#end
@@ -16,8 +16,22 @@ public class SkeletonMain {
 #if($context.gameType == "Multi")        MultiplayerGameRunner gameRunner = new MultiplayerGameRunner();
 
         // Adds as many player as you need to test your game
-        gameRunner.addAgent(Agent1.class);
-        gameRunner.addAgent(Agent2.class);
+
+        gameRunner.addAgent(Agent.class);
+#if($context.numberOfPlayersMin >= 2)        gameRunner.addAgent(Agent.class);
+#end
+#if($context.numberOfPlayersMin >= 3)        gameRunner.addAgent(Agent.class);
+#end
+#if($context.numberOfPlayersMin >= 4)        gameRunner.addAgent(Agent.class);
+#end
+#if($context.numberOfPlayersMin >= 5)        gameRunner.addAgent(Agent.class);
+#end
+#if($context.numberOfPlayersMin >= 6)        gameRunner.addAgent(Agent.class);
+#end
+#if($context.numberOfPlayersMin >= 7)        gameRunner.addAgent(Agent.class);
+#end
+#if($context.numberOfPlayersMin >= 8)        gameRunner.addAgent(Agent.class);
+#end
 
         // Another way to add a player
         // gameRunner.addAgent("python3 /home/user/player.py");#end
