@@ -5,7 +5,7 @@ import com.intellij.ide.wizard.NewProjectWizardStep
 import com.intellij.openapi.project.Project
 import com.intellij.ui.components.DropDownLink
 import com.intellij.ui.dsl.builder.Panel
-import xyz.kandrac.codingame.CodingameWizardBundle
+import xyz.kandrac.codingame.wizard.CodingameWizardBundle
 import xyz.kandrac.codingame.wizard.GENERATOR_TYPE_MULTI
 import xyz.kandrac.codingame.wizard.GeneratorContext
 

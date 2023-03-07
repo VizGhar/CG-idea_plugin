@@ -1,33 +1,34 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
-    <id>xyz.kandrac.Codingame</id>
+    <id>xyz.kandrac.codingame</id>
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
     <name>Codingame</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">YourCompany</vendor>
+    <vendor email="jan@kandrac.xyz" url="https://github.com/VizGhar">VizGhar</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
+        <em>Plugin for Codingame contributors</em><br/>
+        Library currently supports code skeleton builder only:
+        <ul>
+            <li>Multiplayer, Solo and Optimization Game type</li>
+            <li>Java and Kotlin languages</li>
+            <li>Maven only (gradle in progress)</li>
+        </ul>
+        For more information visit the
+        <a href="https://github.com/VizGhar/CG-idea_plugin">project GitHub page</a>.
   ]]></description>
 
-    <!-- Product and plugin compatibility requirements.
-         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>
 
-    <!-- Extension points defined by the plugin.
-         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-<!--        <moduleBuilder builderClass="xyz.kandrac.codingame.wizard.CodingameNewProjectWizardAdapter"/>-->
         <moduleBuilder builderClass="xyz.kandrac.codingame.wizard.CodingameNewProjectWizardAdapter"/>
-<!--        <fileTemplateGroup implementation="xyz.kandrac.codingame.CodingameProjectTemplate"/>-->
     </extensions>
 </idea-plugin>

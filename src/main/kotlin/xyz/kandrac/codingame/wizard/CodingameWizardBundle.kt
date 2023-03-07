@@ -1,4 +1,4 @@
-package xyz.kandrac.codingame
+package xyz.kandrac.codingame.wizard
 
 import com.intellij.DynamicBundle
 

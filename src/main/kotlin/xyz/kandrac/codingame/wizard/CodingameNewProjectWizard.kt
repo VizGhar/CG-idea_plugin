@@ -4,10 +4,8 @@ import com.intellij.ide.fileTemplates.FileTemplateManager
 import com.intellij.ide.util.projectWizard.WizardContext
 import com.intellij.ide.wizard.*
 import com.intellij.ide.starters.local.generator.AssetsProcessor
-import com.intellij.ide.wizard.NewProjectWizardBaseData.Companion.baseData
 import com.intellij.ide.wizard.util.CommentNewProjectWizardStep
 import com.intellij.openapi.project.Project
-import xyz.kandrac.codingame.CodingameWizardBundle
 import xyz.kandrac.codingame.MyIcons
 import xyz.kandrac.codingame.wizard.gametype.CgGameTypeStep
 import xyz.kandrac.codingame.wizard.language.CgLanguageStep
