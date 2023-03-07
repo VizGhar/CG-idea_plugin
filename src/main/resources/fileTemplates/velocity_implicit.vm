@@ -1,0 +1,2 @@
+#* @implicitly included *#
+#* @vtlvariable name="context" type="xyz.kandrac.codingame.wizard.GeneratorContext" *#

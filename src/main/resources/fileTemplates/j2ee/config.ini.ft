@@ -1,0 +1,13 @@
+title=${context.gameTitle}
+#if ($context.gameType == "Multi")
+type=multi
+min_players=${context.numberOfPlayersMin}
+max_players=${context.numberOfPlayersMax}#end
+#if ($context.gameType == "Solo")
+min_players=1
+max_players=1
+type=solo#end
+#if ($context.gameType == "Optim")
+type=opti
+criteria=points
+sorting_order=asc#end

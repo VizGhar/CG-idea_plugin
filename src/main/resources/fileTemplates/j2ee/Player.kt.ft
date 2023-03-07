@@ -1,0 +1,9 @@
+package com.codingame.game
+
+import com.codingame.gameengine.core.AbstractMultiplayerPlayer
+
+#if($context.gameType=="Solo")class Player : AbstractSoloPlayer {#end
+#if($context.gameType=="Multi")class Player : AbstractMultiplayerPlayer() {#end
+
+    override fun getExpectedOutputLines() = 1
+}
