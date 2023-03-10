@@ -1,6 +1,7 @@
 package xyz.kandrac.codingame.wizard
 
 import com.intellij.ide.fileTemplates.FileTemplateManager
+import com.intellij.ide.projectWizard.generators.IntelliJJavaNewProjectWizardData.Companion.sdk
 import com.intellij.ide.util.projectWizard.WizardContext
 import com.intellij.ide.wizard.*
 import com.intellij.ide.starters.local.generator.AssetsProcessor
@@ -10,12 +11,24 @@ import xyz.kandrac.codingame.MyIcons
 import xyz.kandrac.codingame.wizard.gametype.CgGameTypeStep
 import xyz.kandrac.codingame.wizard.language.CgLanguageStep
 import com.intellij.ide.starters.local.GeneratorTemplateFile
+import com.intellij.ide.wizard.NewProjectWizardBaseData.Companion.name
+import com.intellij.ide.wizard.NewProjectWizardBaseData.Companion.path
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.ProjectManager
+import com.intellij.openapi.projectRoots.Sdk
+import xyz.kandrac.codingame.wizard.sdk.CgSdkWizardStep
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 
+// TODO: not correct solution, but hey! it's working
+private var wizardAdapter : CodingameNewProjectWizardAdapter? = null
+var projectSdk: Sdk? = null
+
 class CodingameNewProjectWizardAdapter : GeneratorNewProjectWizardBuilderAdapter(CodingameNewProjectWizard()) {
+
+    init {
+        wizardAdapter = this
+    }
 
     override fun getWeight() = JVM_WEIGHT - 10
 
@@ -35,14 +48,12 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
 
     override fun createStep(context: WizardContext) =
         RootNewProjectWizardStep(context)
-            .chain(
-                CodingameNewProjectWizard::CommentStep,
-                ::NewProjectWizardBaseStep,
-                ::CgLanguageStep,
-                ::CgGameTypeStep
-            ).chain(
-                ::CgAssetsStep
-            )
+            .chain(CodingameNewProjectWizard::CommentStep)
+            .chain(::NewProjectWizardBaseStep)
+            .chain(::CgSdkWizardStep)
+            .chain(::CgLanguageStep)
+            .chain(::CgGameTypeStep)
+            .chain(::CgAssetsStep)
 
     class CommentStep(parent: NewProjectWizardStep) : CommentNewProjectWizardStep(parent) {
 
@@ -53,9 +64,7 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
     class CgAssetsStep(parent: NewProjectWizardStep) : AbstractNewProjectWizardStep(parent) {
 
         override fun setupProject(project: Project) {
-            val name = data.getUserData(NewProjectWizardBaseData.KEY)!!.name
-            val path = data.getUserData(NewProjectWizardBaseData.KEY)!!.path
-
+            wizardAdapter?.moduleJdk = projectSdk
             val ftManager = FileTemplateManager.getInstance(ProjectManager.getInstance().defaultProject)
 
             val sources = when (GeneratorContext.language) {
@@ -133,6 +142,7 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
                     )
                 )
             }
+            wizardAdapter = null
         }
     }
 }
