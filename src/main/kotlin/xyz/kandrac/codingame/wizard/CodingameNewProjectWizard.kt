@@ -11,6 +11,7 @@ import xyz.kandrac.codingame.MyIcons
 import xyz.kandrac.codingame.wizard.gametype.CgGameTypeStep
 import xyz.kandrac.codingame.wizard.language.CgLanguageStep
 import com.intellij.ide.starters.local.GeneratorTemplateFile
+import com.intellij.ide.starters.local.StandardAssetsProvider
 import com.intellij.ide.wizard.NewProjectWizardBaseData.Companion.name
 import com.intellij.ide.wizard.NewProjectWizardBaseData.Companion.path
 import com.intellij.openapi.application.ApplicationManager
@@ -93,14 +94,19 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
                 else -> throw IllegalStateException("Either $GENERATOR_LANGUAGE_JAVA or $GENERATOR_LANGUAGE_KOTLIN can be selected as `GeneratorContext.language`")
             }
 
+            val standardAssetsProvider = StandardAssetsProvider()
+
             val buildSystem = when (GeneratorContext.buildSystem) {
                 GENERATOR_BUILD_SYSTEM_MAVEN -> listOf(
                     GeneratorTemplateFile("pom.xml", ftManager.getJ2eeTemplate("pom.xml")),
-                )
-                GENERATOR_BUILD_SYSTEM_GRADLE -> listOf(
-                    GeneratorTemplateFile("build.gradle", ftManager.getJ2eeTemplate("build.gradle")),
-                    GeneratorTemplateFile("gradle.properties", ftManager.getJ2eeTemplate("gradle.properties")),
-                )
+                ) + standardAssetsProvider.getMvnwAssets()
+
+                GENERATOR_BUILD_SYSTEM_GRADLE ->
+                    listOf(
+                        GeneratorTemplateFile("build.gradle", ftManager.getJ2eeTemplate("build.gradle")),
+                        GeneratorTemplateFile("gradle.properties", ftManager.getJ2eeTemplate("gradle.properties")),
+                        GeneratorTemplateFile(standardAssetsProvider.gradleWrapperPropertiesLocation, ftManager.getJ2eeTemplate("gradle-wrapper.properties")),
+                    ) + standardAssetsProvider.getGradlewAssets()
                 else -> throw IllegalStateException("Either $GENERATOR_BUILD_SYSTEM_MAVEN or $GENERATOR_BUILD_SYSTEM_GRADLE can be selected as `GeneratorContext.buildSystem`")
             }
 

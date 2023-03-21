@@ -1,0 +1,32 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.8.0'
+    id 'application'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    def codingameVersion = '4.2.1'
+    implementation "com.codingame.gameengine:core:$codingameVersion"
+    implementation "com.codingame.gameengine:module-entities:$codingameVersion"
+    implementation "com.codingame.gameengine:runner:$codingameVersion"
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+kotlin {
+    jvmToolchain(11)
+}
+
+application {
+    mainClassName = 'MainKt'
+}
