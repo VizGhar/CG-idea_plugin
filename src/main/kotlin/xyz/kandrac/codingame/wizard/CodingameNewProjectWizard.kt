@@ -16,6 +16,7 @@ import com.intellij.ide.wizard.NewProjectWizardBaseData.Companion.path
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.projectRoots.Sdk
+import xyz.kandrac.codingame.wizard.buildsystem.CgBuildSystemStep
 import xyz.kandrac.codingame.wizard.sdk.CgSdkWizardStep
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
@@ -50,8 +51,9 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
         RootNewProjectWizardStep(context)
             .chain(::NewProjectWizardBaseStep)
             .chain(::CgSdkComment)
-            .chain(::CgSdkWizardStep)
             .chain(::CgLanguageStep)
+            .chain(::CgBuildSystemStep)
+            .chain(::CgSdkWizardStep)
             .chain(::CgGameTypeStep)
             .chain(::CgAssetsStep)
 
