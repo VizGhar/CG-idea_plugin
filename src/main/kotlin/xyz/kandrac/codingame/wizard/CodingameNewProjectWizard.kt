@@ -48,16 +48,16 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
 
     override fun createStep(context: WizardContext) =
         RootNewProjectWizardStep(context)
-            .chain(CodingameNewProjectWizard::CommentStep)
             .chain(::NewProjectWizardBaseStep)
+            .chain(::CgSdkComment)
             .chain(::CgSdkWizardStep)
             .chain(::CgLanguageStep)
             .chain(::CgGameTypeStep)
             .chain(::CgAssetsStep)
 
-    class CommentStep(parent: NewProjectWizardStep) : CommentNewProjectWizardStep(parent) {
+    class CgSdkComment(parent: NewProjectWizardStep) : CommentNewProjectWizardStep(parent) {
 
-        override val comment = CodingameWizardBundle.getMessage("codingame.new.project.wizard.welcome.comment")
+        override val comment = CodingameWizardBundle.getMessage("codingame.new.project.wizard.jdk.title")
 
     }
 
