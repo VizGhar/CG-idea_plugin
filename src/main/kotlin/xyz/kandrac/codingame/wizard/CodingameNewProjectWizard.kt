@@ -15,6 +15,9 @@ import com.intellij.ide.starters.local.StandardAssetsProvider
 import com.intellij.ide.wizard.NewProjectWizardBaseData.Companion.name
 import com.intellij.ide.wizard.NewProjectWizardBaseData.Companion.path
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.externalSystem.model.ProjectSystemId
+import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode
+import com.intellij.openapi.externalSystem.util.ExternalSystemUtil
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.projectRoots.Sdk
 import xyz.kandrac.codingame.wizard.buildsystem.CgBuildSystemStep
@@ -50,13 +53,9 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
 
     override fun createStep(context: WizardContext) =
         RootNewProjectWizardStep(context)
-            .chain(::NewProjectWizardBaseStep)
-            .chain(::CgSdkComment)
-            .chain(::CgLanguageStep)
-            .chain(::CgBuildSystemStep)
-            .chain(::CgSdkWizardStep)
-            .chain(::CgGameTypeStep)
-            .chain(::CgAssetsStep)
+            .chain(::NewProjectWizardBaseStep, ::CgLanguageStep, ::CgBuildSystemStep)
+            .chain(::CgSdkComment, ::CgSdkWizardStep)
+            .chain(::CgGameTypeStep, ::CgAssetsStep)
 
     class CgSdkComment(parent: NewProjectWizardStep) : CommentNewProjectWizardStep(parent) {
 
@@ -122,8 +121,10 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
 
             ApplicationManager.getApplication().runWriteAction{
                 @Suppress("UnstableApiUsage")
+                val projectPath = Path.of(path, name).absolutePathString()
+
                 AssetsProcessor().generateSources(
-                    Path.of(path, name).absolutePathString(),
+                    projectPath,
                     // list of all generated sources
                     // - first argument - export path
                     // - second argument - src/main/resources/fileTemplates/j2ee template
@@ -149,8 +150,25 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
                         "context" to GeneratorContext
                     )
                 )
+
+                val projectSystemId = when (GeneratorContext.buildSystem) {
+                    GENERATOR_BUILD_SYSTEM_GRADLE -> ProjectSystemId("GRADLE")
+                    GENERATOR_BUILD_SYSTEM_MAVEN -> ProjectSystemId("Maven")
+                    else -> throw IllegalStateException()
+                }
+
+                try {
+                    ExternalSystemUtil.refreshProject(
+                        project, projectSystemId, projectPath, false,
+                        ProgressExecutionMode.IN_BACKGROUND_ASYNC
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
             }
             wizardAdapter = null
+
         }
     }
 }
