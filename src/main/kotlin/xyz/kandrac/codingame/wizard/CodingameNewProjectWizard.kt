@@ -16,6 +16,10 @@ import com.intellij.ide.wizard.NewProjectWizardBaseData.Companion.path
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.projectRoots.Sdk
+import com.intellij.ui.dsl.builder.BottomGap
+import com.intellij.ui.dsl.builder.Panel
+import com.intellij.ui.dsl.builder.Row
+import com.intellij.util.ui.JBUI
 import xyz.kandrac.codingame.wizard.sdk.CgSdkWizardStep
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
@@ -48,17 +52,20 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
 
     override fun createStep(context: WizardContext) =
         RootNewProjectWizardStep(context)
-            .chain(::NewProjectWizardBaseStep)
-            .chain(::CgSdkComment)
-            .chain(::CgSdkWizardStep)
-            .chain(::CgLanguageStep)
-            .chain(::CgGameTypeStep)
-            .chain(::CgAssetsStep)
+            .chain(::NewProjectWizardBaseStep, ::CgSdkComment, ::CgSdkWizardStep)
+            .chain(::CgLanguageStep, ::CgGameTypeStep, ::CgAssetsStep)
 
-    class CgSdkComment(parent: NewProjectWizardStep) : CommentNewProjectWizardStep(parent) {
+    class CgSdkComment(parent: NewProjectWizardStep) : AbstractNewProjectWizardStep(parent) {
 
-        override val comment = CodingameWizardBundle.getMessage("codingame.new.project.wizard.jdk.title")
+        override fun setupUI(builder: Panel) {
+            with(builder) { row(init = ::setupCommentUi) }
+        }
 
+        private fun setupCommentUi(builder: Row) {
+            builder.text(CodingameWizardBundle.getMessage("codingame.new.project.wizard.jdk.title"))
+                .applyToComponent { foreground = JBUI.CurrentTheme.ContextHelp.FOREGROUND }
+            builder.bottomGap(BottomGap.SMALL)
+        }
     }
 
     class CgAssetsStep(parent: NewProjectWizardStep) : AbstractNewProjectWizardStep(parent) {
@@ -91,16 +98,7 @@ class CodingameNewProjectWizard : GeneratorNewProjectWizard {
                 else -> throw IllegalStateException("Either $GENERATOR_LANGUAGE_JAVA or $GENERATOR_LANGUAGE_KOTLIN can be selected as `GeneratorContext.language`")
             }
 
-            val buildSystem = when (GeneratorContext.buildSystem) {
-                GENERATOR_BUILD_SYSTEM_MAVEN -> listOf(
-                    GeneratorTemplateFile("pom.xml", ftManager.getJ2eeTemplate("pom.xml")),
-                )
-                GENERATOR_BUILD_SYSTEM_GRADLE -> listOf(
-                    GeneratorTemplateFile("build.gradle", ftManager.getJ2eeTemplate("build.gradle")),
-                    GeneratorTemplateFile("gradle.properties", ftManager.getJ2eeTemplate("gradle.properties")),
-                )
-                else -> throw IllegalStateException("Either $GENERATOR_BUILD_SYSTEM_MAVEN or $GENERATOR_BUILD_SYSTEM_GRADLE can be selected as `GeneratorContext.buildSystem`")
-            }
+            val buildSystem = GeneratorTemplateFile("pom.xml", ftManager.getJ2eeTemplate("pom.xml"))
 
             val testCases = when (GeneratorContext.gameType) {
                 GENERATOR_TYPE_SOLO -> listOf(
